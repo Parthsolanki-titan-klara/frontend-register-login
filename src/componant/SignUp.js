@@ -3,7 +3,9 @@ import { signupFields } from "../constants/FormFields"
 import FormAction from "./FormAction";
 import Input from "./Input";
 import { useNavigate } from 'react-router-dom';
-import { Alert } from '@mui/material';
+import { data } from 'autoprefixer';
+import { toast } from 'react-toastify';
+
 
 const fields=signupFields;
 
@@ -13,9 +15,6 @@ fields.forEach(field => fieldsState[field.id]='');
 
 export default function SignUp(){
   const [signupState,setSignupState]=useState(fieldsState);
-
-  const [successMessage, setSuccessMessage] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
 
   const handleChange=(e)=>setSignupState({...signupState,[e.target.id]:e.target.value});
 
@@ -44,40 +43,30 @@ export default function SignUp(){
         credentials: 'include'
       });
 
+      const data = await response.json();
       if (!response.ok) {
+        toast.error(data.message || 'Registration failed. Please try again.');
         throw new Error('Network response was not ok');
       }
 
-      const data = await response.json();
+      console.log('response :', response);
+      
+      
       console.log('Success:', data);
-      setSuccessMessage('Registration successful!');
-
+      console.log('accessToken:', data.accessToken);
+      
+      toast.success('Registration successful!');
       setTimeout(() => {
         navigate('/');
       }, 1000);
     } catch (error) {
-      console.error('Error:', error);
-      setErrorMessage('Registration failed. Please try again.');
+      console.error('error mesage :' , error);
+      console.log('error mesage :' , data.message);
     }
   }
 
     return(
       <div className="mt-8 space-y-6">
-          {successMessage && (
-        <div style={{ position: 'fixed', top: '10px', right: '10px', zIndex: 1000 }}>
-          <Alert variant="filled" severity="success">
-          {successMessage}
-          </Alert>
-        </div>
-      )}
-        {errorMessage && (
-        <div style={{ position: 'fixed', top: '10px', right: '10px', zIndex: 1000 }}>
-          <Alert variant="filled" severity="error">
-          {errorMessage}
-          </Alert>
-        </div>
-      )}
-   
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
         <div className="">
         {
