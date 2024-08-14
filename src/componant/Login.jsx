@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { loginFields } from "../constants/FormFields.js";
+import { loginFields } from "../constants/FormFields";
 import Input from "./Input";
-import FormExtra from "./FormExtra.js";
-import FormAction from "./FormAction.js";
+import FormExtra from "./FormExtra";
+import FormAction from "./FormAction";
 import { Navigate, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { setTokens } from "./slices/authSlice";
+import { setTokens } from "./slices/authSlice.jsx";
 import { useDispatch, useSelector } from 'react-redux';
 
 const fields = loginFields;
