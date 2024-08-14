@@ -5,7 +5,7 @@ import {
 } from "react-router-dom";
 import './App.css';
 import { LoginPage } from './pages/Login';
-import SignUp from "./pages/SignUp";
+// import SignUp from "./pages/SignUp";
 import Dashboard from "./componant/Dashboard";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -22,7 +22,7 @@ export default function App() {
           <Route element={<PrivateRoute/>}>
             <Route path="/dashboard" element={<Dashboard/>} />
           </Route>
-          <Route path="/signup" element={<SignUp/>} />
+          {/* <Route path="/signup" element={<SignUp/>} /> */}
         </Routes>
       </BrowserRouter>
     
