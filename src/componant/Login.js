@@ -3,9 +3,10 @@ import { loginFields } from "../constants/FormFields.js";
 import Input from "./Input";
 import FormExtra from "./FormExtra.js";
 import FormAction from "./FormAction.js";
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-
+import { setTokens } from "./slices/authSlice";
+import { useDispatch, useSelector } from 'react-redux';
 
 const fields = loginFields;
 let fieldsState = {};
@@ -13,6 +14,9 @@ fields.forEach(field => fieldsState[field.id] = '');
 
 export default function Login() {
     const [loginState, setLoginState] = useState(fieldsState);
+    const accessToken = useSelector((state) => state.auth.accessToken);
+
+    const dispatch = useDispatch();
 
     const navigate = useNavigate();
 
@@ -26,7 +30,7 @@ export default function Login() {
     }
 
     //Handle Login API Integration here
-    const authenticateUser = async () => {
+    const authenticateUser = async (event) => {
         try {
             const headers = new Headers();
             headers.append('Content-Type', 'application/json');
@@ -47,16 +51,19 @@ export default function Login() {
 
 
             console.log('Success:', data);
-            localStorage.setItem('accessToken', data.accessToken);
-            localStorage.setItem('refreshToken', data.refreshToken);
+            dispatch(setTokens({ accessToken: data.accessToken, refreshToken: data.refreshToken }));
             toast.success('Login successful!');
-            setTimeout(() => {
-                navigate('/dashboard');
-            }, 1000);
+            navigate('/dashboard');
+            // setTimeout(() => {
+            //     navigate('/dashboard');
+            // }, 1000);
         } catch (error) {
             console.error('Error:', error);        }
     }
 
+    if (accessToken) {
+        return <Navigate to="/dashboard" />
+    }
     return (
         <div className="mt-8 space-y-6">
             <form className="mt-8 space-y-6" onSubmit={handleSubmit}>

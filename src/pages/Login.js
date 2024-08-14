@@ -10,7 +10,7 @@ export function LoginPage(){
                 linkName="Signup"
                 linkUrl="/signup"
                 />
-            <Login/>        
+            <Login/>
         </>
     );
 }
