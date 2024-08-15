@@ -1,9 +1,8 @@
 import React from 'react';
+import HeaderBar from './header/HeaderBar';
 
 export default function Dashboard() {
     return (
-            <div>
-                <h1>Dashboard</h1>
-            </div>
+            <HeaderBar/>
     );
 }

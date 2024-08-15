@@ -35,7 +35,7 @@ export default function Login() {
             const headers = new Headers();
             headers.append('Content-Type', 'application/json');
 
-            const response = await fetch('http://localhost:8080/api/v1/login', {
+            const response = await fetch(import.meta.env.VITE_LOGIN_API, {
                 method: 'POST',
                 headers: headers,
                 body: JSON.stringify(loginState),
@@ -53,10 +53,9 @@ export default function Login() {
             console.log('Success:', data);
             dispatch(setTokens({ accessToken: data.accessToken, refreshToken: data.refreshToken }));
             toast.success('Login successful!');
-            navigate('/dashboard');
-            // setTimeout(() => {
-            //     navigate('/dashboard');
-            // }, 1000);
+            setTimeout(() => {
+                navigate('/dashboard');
+            }, 1000);
         } catch (error) {
             console.error('Error:', error);        }
     }

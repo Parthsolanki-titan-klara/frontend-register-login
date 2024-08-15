@@ -6,7 +6,7 @@ const PrivateRoute = () => {
     console.log("accessToken : ", accessToken);
     
     return (
-        accessToken ? <Outlet/> : <Navigate to="/signIn" />
+        accessToken ? <Outlet/> : <Navigate to="/" />
     );
 }
 
