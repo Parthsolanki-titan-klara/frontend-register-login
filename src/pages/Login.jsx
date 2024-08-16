@@ -1,16 +1,20 @@
 import { Header } from "../componant/Header";
 import Login from "../componant/Login";
 
-export function LoginPage(){
-    return(
+export function LoginPage() {
+    return (
         <>
-            <Header
-                heading="Login to your account"
-                paragraph="Don't have an account yet? "
-                linkName="Signup"
-                linkUrl="/signup"
-                />
-            <Login/>
+            <div className="min-h-full h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+                <div className="max-w-md w-full space-y-8">
+                    <Header
+                        heading="Login to your account"
+                        paragraph="Don't have an account yet? "
+                        linkName="Signup"
+                        linkUrl="/sign-up"
+                    />
+                    <Login />
+                </div>
+            </div>
         </>
     );
 }

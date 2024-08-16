@@ -20,7 +20,7 @@ export default function App() {
           <Route element={<PrivateRoute/>}>
             <Route path="/dashboard" element={<Dashboard/>} />
           </Route>
-          <Route path="/signup" element={<SignUp/>} />
+          <Route path="/sign-up" element={<SignUp/>} />
         </Routes>
       </BrowserRouter>
   );
