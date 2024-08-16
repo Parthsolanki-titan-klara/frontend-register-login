@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import HeaderBar from './header/HeaderBar';
 import Hero from './Hero.jsx';
+import Features from './Features.jsx';
 
 export default function Dashboard() {
 
@@ -9,6 +10,7 @@ export default function Dashboard() {
         <>
             <HeaderBar />
             <Hero />
+            <Features/>
         </>
 
     );

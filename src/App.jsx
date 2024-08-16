@@ -13,16 +13,16 @@ import PrivateRoute from "./componant/protect-route/PrivateRoute";
 
 export default function App() {
   return (
-      <BrowserRouter>
+    <BrowserRouter>
       <ToastContainer autoClose={1000}/>
-        <Routes>
-          <Route path="/" element={<LoginPage/>} />
+      <Routes>
+        <Route path="/" element={<LoginPage/>} />
           <Route element={<PrivateRoute/>}>
             <Route path="/dashboard" element={<Dashboard/>} />
-          </Route>
+        </Route>
           <Route path="/sign-up" element={<SignUp/>} />
-        </Routes>
-      </BrowserRouter>
+      </Routes>
+    </BrowserRouter>
   );
 }
 

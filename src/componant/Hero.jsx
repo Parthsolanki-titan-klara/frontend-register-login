@@ -77,7 +77,7 @@ export default function Hero() {
               size="small"
               variant="outlined"
               aria-label="Enter your email address"
-              placeholder="Your email address"
+              placeholder="Registered email address"
               inputProps={{
                 autoComplete: 'off',
                 'aria-label': 'Enter your email address',
@@ -104,8 +104,8 @@ export default function Hero() {
             width: '100%',
             backgroundImage:
               theme.palette.mode === 'light'
-                ? 'url("/static/images/templates/templates-images/hero-light.png")'
-                : 'url("/static/images/templates/templates-images/hero-dark.png")',
+                ? 'url("/src/assets/hero-light.png")'
+                : 'url("/src/assets/hero-light.png")',
             backgroundSize: 'cover',
             borderRadius: '10px',
             outline: '1px solid',

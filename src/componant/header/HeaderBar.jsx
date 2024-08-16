@@ -156,9 +156,6 @@ function HeaderBar() {
                                 color="primary"
                                 variant="contained"
                                 size="small"
-                                component="a"
-                                href=""
-                                target="_blank"
                                 onClick={handleLogout}
                             >
                                 Log Out
@@ -211,9 +208,6 @@ function HeaderBar() {
                                         <Button
                                             color="primary"
                                             variant="contained"
-                                            component="a"
-                                            href=""
-                                            target="_blank"
                                             sx={{ width: '100%' }}
                                             onClick={handleLogout}
                                         >

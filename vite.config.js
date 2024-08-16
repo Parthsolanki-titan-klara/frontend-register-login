@@ -11,6 +11,6 @@ export default defineConfig({
     open: true, // Automatically opens the app in the browser on startup
   },
   build: {
-    outDir: 'build', // Ensure the build output goes to the "build" directory
+    outDir: 'dist', // Ensure the build output goes to the "build" directory
   }
 });
