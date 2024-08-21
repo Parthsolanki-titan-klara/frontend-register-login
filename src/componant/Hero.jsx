@@ -7,6 +7,7 @@ import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import dashLight from '../assets/dash-light.png';
 
 export default function Hero() {
   return (
@@ -104,8 +105,8 @@ export default function Hero() {
             width: '100%',
             backgroundImage:
               theme.palette.mode === 'light'
-                ? 'url("/src/assets/hero-light.png")'
-                : 'url("/src/assets/hero-light.png")',
+                ? 'url("/assets/dash-light.png")'
+                : 'url("/assets/dash-light.png")',
             backgroundSize: 'cover',
             borderRadius: '10px',
             outline: '1px solid',

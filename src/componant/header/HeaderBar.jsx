@@ -23,7 +23,7 @@ const logoStyle = {
 };
 
 function HeaderBar() {
-    
+
     const [open, setOpen] = useState(false);
 
     const dispatch = useDispatch();
@@ -32,6 +32,10 @@ function HeaderBar() {
     const handleLogout = () => {
         dispatch(clearTokens({ accessToken: null, refreshToken: null }));
         navigate('/');
+    };
+
+    const handleResetPassword = () => {
+        navigate('/reset-password');
     };
 
     const toggleDrawer = (newOpen) => () => {
@@ -156,6 +160,14 @@ function HeaderBar() {
                                 color="primary"
                                 variant="contained"
                                 size="small"
+                                onClick={handleResetPassword}
+                            >
+                                Reset Password
+                            </Button>
+                            <Button
+                                color="primary"
+                                variant="contained"
+                                size="small"
                                 onClick={handleLogout}
                             >
                                 Log Out
@@ -204,6 +216,16 @@ function HeaderBar() {
                                     </MenuItem>
                                     <MenuItem onClick={() => scrollToSection('faq')}>FAQ</MenuItem>
                                     <Divider />
+                                    <MenuItem>
+                                        <Button
+                                            color="primary"
+                                            variant="contained"
+                                            sx={{ width: '100%' }}
+                                            onClick={handleResetPassword}
+                                        >
+                                            Reset Password
+                                        </Button>
+                                    </MenuItem>
                                     <MenuItem>
                                         <Button
                                             color="primary"

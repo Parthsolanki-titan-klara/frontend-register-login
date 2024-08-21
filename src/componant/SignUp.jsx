@@ -34,7 +34,7 @@ export default function SignUp(){
       headers.append('Content-Type', 'application/json');
 
 
-      const response = await fetch('http://localhost:8080/api/v1/register', {
+      const response = await fetch(import.meta.env.VITE_REGISTER_API, {
         method: 'POST',
         headers: headers,
         body: JSON.stringify(signupState),

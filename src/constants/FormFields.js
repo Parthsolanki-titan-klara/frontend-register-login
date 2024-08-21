@@ -78,3 +78,27 @@ export const signupFields=[
         ]
     }
 ]
+
+
+export const resetPasswordFields = [
+    {
+        labelText: "New Password",
+        labelFor: "newPassword",
+        id: "newPassword",
+        name: "newPassword",
+        type: "password",
+        autoComplete: "newPassword",
+        isRequired: true,
+        placeholder: "New Password"
+    },
+    {
+        labelText: "Confirm Password",
+        labelFor: "confirmPassword",
+        id: "confirmPassword",
+        name: "confirmPassword",
+        type: "password",
+        autoComplete: "confirmPassword",
+        isRequired: true,
+        placeholder: "Confirm Password"
+    }
+];
