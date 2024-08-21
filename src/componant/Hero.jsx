@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import { alpha } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -7,9 +7,31 @@ import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import dashLight from '../assets/dash-light.png';
+import { useSelector } from 'react-redux';
+import { Navigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 export default function Hero() {
+  const email = useSelector((state) => state.auth.email);
+  const [navigate, setNavigate] = useState(false);
+
+  console.log("email : ", email);
+
+  const handleSubmit = () => {
+    const inputEmail = document.getElementById('outlined-basic').value;
+    console.log("inputEmail at submit time : ", inputEmail);
+    console.log("email at submit time : ", email);
+    if (email === inputEmail) {
+      setNavigate(true);
+    }else{
+      toast.error('Please enter registered email address');
+    } 
+  };
+
+  if (navigate) {
+    return <Navigate to="/software-dashboard" />;
+  }
+  
   return (
     <Box
       id="hero"
@@ -84,7 +106,7 @@ export default function Hero() {
                 'aria-label': 'Enter your email address',
               }}
             />
-            <Button variant="contained" color="primary">
+            <Button variant="contained" color="primary" onClick={handleSubmit}>
               Start now
             </Button>
           </Stack>

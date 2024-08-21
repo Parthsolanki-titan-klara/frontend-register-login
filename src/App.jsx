@@ -11,6 +11,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import PrivateRoute from "./componant/protect-route/PrivateRoute";
 import ForgotPassword from "./componant/ForgotPassword";
+import SoftwareDashboard from "./componant/software/softwareDashboard";
 
 export default function App() {
   return (
@@ -23,6 +24,7 @@ export default function App() {
           <Route path="/reset-password" element={<ForgotPassword />} />
         </Route>
         <Route path="/sign-up" element={<SignUp />} />
+        <Route path="/software-dashboard" element={<SoftwareDashboard />} />
       </Routes>
     </BrowserRouter>
   );

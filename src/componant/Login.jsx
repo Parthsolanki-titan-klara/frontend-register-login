@@ -51,7 +51,7 @@ export default function Login() {
 
 
             console.log('Success:', data);
-            dispatch(setTokens({ accessToken: data.accessToken, refreshToken: data.refreshToken }));
+            dispatch(setTokens({ accessToken: data.accessToken, refreshToken: data.refreshToken, email: data.email }));
             toast.success('Login successful!');
             setTimeout(() => {
                 navigate('/dashboard');

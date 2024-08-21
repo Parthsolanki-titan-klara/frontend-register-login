@@ -1,10 +1,17 @@
-import { React } from "react";
 
-export default function softwareDashboard() {
+import React from 'react'
+import SoftwareHeader from '../header/SoftwareHeader'
+import Hero from '../Hero'
+import MiniDrawer from '../MiniDrawer'
 
+const SoftwareDashboard = () => {
     return (
-        <div>
-            <h1>Software Dashboard</h1>
-        </div>
+        <>
+            <SoftwareHeader />
+            <Hero />
+            <MiniDrawer />
+        </>
     )
 }
+
+export default SoftwareDashboard
