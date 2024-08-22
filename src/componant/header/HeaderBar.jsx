@@ -13,6 +13,9 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { clearTokens } from '../slices/authSlice';
+import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
+import { IconButton } from '@mui/material';
+
 
 // ----------------------------------------------START----------------------------------------------
 
@@ -156,22 +159,9 @@ function HeaderBar() {
                                 alignItems: 'center',
                             }}
                         >
-                            <Button
-                                color="primary"
-                                variant="contained"
-                                size="small"
-                                onClick={handleResetPassword}
-                            >
-                                Reset Password
-                            </Button>
-                            <Button
-                                color="primary"
-                                variant="contained"
-                                size="small"
-                                onClick={handleLogout}
-                            >
-                                Log Out
-                            </Button>
+                            <IconButton size="sm" variant="plain" color="neutral" onClick={handleLogout}>
+                                <LogoutRoundedIcon />
+                            </IconButton>
                         </Box>
                         <Box sx={{ display: { sm: '', md: 'none' } }}>
                             <Button

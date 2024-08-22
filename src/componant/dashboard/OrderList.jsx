@@ -4,7 +4,7 @@ import Box from '@mui/joy/Box';
 import Avatar from '@mui/joy/Avatar';
 import Chip from '@mui/joy/Chip';
 import Link from '@mui/joy/Link';
-import Divider from '@mui/joy/Divider';
+import Divider from '@mui/joy/Divider'; 
 import IconButton from '@mui/joy/IconButton';
 import Typography from '@mui/joy/Typography';
 import List from '@mui/joy/List';
