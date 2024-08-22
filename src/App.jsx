@@ -11,7 +11,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import PrivateRoute from "./componant/protect-route/PrivateRoute";
 import ForgotPassword from "./componant/ForgotPassword";
-import SoftwareDashboard from "./componant/softwareDashboard";
+import SoftwareDashboard from "./componant/dashboard/SoftwareDashboard";
 
 export default function App() {
   return (

@@ -17,6 +17,9 @@ RUN mkdir -p /usr/share/nginx/html/public
 # Copy build artifacts
 COPY --from=build /app/dist /usr/share/nginx/html
 
+# Copy the public folder
+COPY --from=build /app/public /usr/share/nginx/html/public
+
 # Ensure proper file permissions
 RUN chmod -R 755 /usr/share/nginx/html
 

@@ -127,8 +127,8 @@ export default function Hero() {
             width: '100%',
             backgroundImage:
               theme.palette.mode === 'light'
-                ? 'url("/assets/dash-light.png")'
-                : 'url("/assets/dash-light.png")',
+                ? 'url("/public/assets/hero-light.png")'
+                : 'url("/public/assets/hero-dark.png")',
             backgroundSize: 'cover',
             borderRadius: '10px',
             outline: '1px solid',
