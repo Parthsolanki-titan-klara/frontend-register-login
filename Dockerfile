@@ -1,29 +1,56 @@
-# Step 1: Use an official Node.js runtime as a parent image
-FROM node:14 AS build
+# # This is the newer version
 
-# Step 2: Set the working directory
+# FROM node:18-alpine
+
+# WORKDIR /app
+
+# COPY package.json .
+
+# RUN npm install
+
+# RUN npm i -g serve
+
+# COPY . .
+
+# RUN npm run build
+
+# EXPOSE 3000
+
+# CMD [ "serve", "-s", "dist" ]
+
+# Stage 1: Build the application
+FROM --platform=linux/amd64 node:18.12.1-alpine as build
 WORKDIR /app
-
-# Step 3: Copy package.json and package-lock.json
-COPY package*.json ./
-
-# Step 4: Install dependencies
+COPY package.json ./
 RUN npm install
-
-# Step 5: Copy the rest of the application files
 COPY . .
-
-# Step 6: Build the React application
 RUN npm run build
 
-# Step 7: Use an official nginx image to serve the build
-FROM nginx:alpine
+# Stage 2: Serve the application with Nginx
+FROM --platform=linux/amd64 nginx:alpine
 
-# Step 8: Copy the build output to the nginx html directory
+LABEL component=web
+
+# Create app root folder
+RUN mkdir -p /usr/share/nginx/html/public
+
+# # Copy nginx.conf and contents
+# # COPY --from=build /app/nginx.conf /etc/nginx/nginx.conf
+# COPY --from=build /app/public /usr/share/nginx/html/public
+# COPY --from=build /app/dist/index.html /usr/share/nginx/html/public
+# COPY --from=build /app/dist/assets /usr/share/nginx/html/public/assets
+
+# # Copy .env file
+# COPY --from=build /app/.env /usr/share/nginx/html/public/.env
+
+# Copy build artifacts
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# Step 9: Expose port 80
+# Ensure proper file permissions
+RUN chmod -R 755 /usr/share/nginx/html
+
+
 EXPOSE 80
 
-# Step 10: Start nginx server
+# Call entrypoint
 CMD ["nginx", "-g", "daemon off;"]
