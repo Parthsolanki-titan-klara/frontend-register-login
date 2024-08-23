@@ -10,11 +10,10 @@ import Typography from '@mui/material/Typography';
 import MenuItem from '@mui/material/MenuItem';
 import Drawer from '@mui/material/Drawer';
 import MenuIcon from '@mui/icons-material/Menu';
-import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { clearTokens } from '../slices/authSlice';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import { IconButton } from '@mui/material';
+import useHandleLogout from '../LogOut';
 
 
 // ----------------------------------------------START----------------------------------------------
@@ -26,16 +25,10 @@ const logoStyle = {
 };
 
 function HeaderBar() {
+    const handleLogout = useHandleLogout();
 
     const [open, setOpen] = useState(false);
-
-    const dispatch = useDispatch();
     const navigate = useNavigate();
-
-    const handleLogout = () => {
-        dispatch(clearTokens({ accessToken: null, refreshToken: null }));
-        navigate('/');
-    };
 
     const handleResetPassword = () => {
         navigate('/reset-password');

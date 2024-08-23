@@ -62,20 +62,6 @@ export const signupFields=[
         autoComplete:"current-password",
         isRequired:true,
         placeholder:"Password"   
-    },
-    {
-        labelText: "Role",
-        labelFor: "role",
-        id: "role",
-        name: "role",
-        type: "select",
-        autoComplete: "role",
-        isRequired: true,
-        placeholder: "Role",
-        options: [
-            { value: "ADMIN", label: "Admin" },
-            { value: "USER", label: "User" }
-        ]
     }
 ]
 

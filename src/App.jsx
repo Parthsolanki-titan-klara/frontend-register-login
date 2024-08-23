@@ -12,6 +12,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import PrivateRoute from "./componant/protect-route/PrivateRoute";
 import ForgotPassword from "./componant/ForgotPassword";
 import SoftwareDashboard from "./componant/dashboard/SoftwareDashboard";
+import AdminDashboard from "./componant/dashboard/AdminDashboard";
+import { UnAuthorized } from "./pages/UnAuthorized";
 
 export default function App() {
   return (
@@ -25,6 +27,8 @@ export default function App() {
         </Route>
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/software-dashboard" element={<SoftwareDashboard />} />
+        <Route path="/admin-dashboard" element={<AdminDashboard />} />
+        <Route path="/unauthorized" element={<UnAuthorized/>} />
       </Routes>
     </BrowserRouter>
   );

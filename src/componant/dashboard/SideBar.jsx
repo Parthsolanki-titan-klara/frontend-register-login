@@ -32,6 +32,8 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 import ColorSchemeToggle from './ColorSchemeToggle';
 import closeSidebar from './utils';
+import useHandleLogout from '../LogOut';
+// ------------------------------------------------------------START OF CODE-----------------------------------------------------------------------------------------------
 
 function Toggler({
   defaultExpanded = false,
@@ -59,6 +61,8 @@ function Toggler({
 }
 
 export default function Sidebar() {
+  const handleLogout = useHandleLogout();
+
   return (
     <Sheet
       className="Sidebar"
@@ -301,10 +305,10 @@ export default function Sidebar() {
           src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=286"
         />
         <Box sx={{ minWidth: 0, flex: 1 }}>
-          <Typography level="title-sm">Siriwat K.</Typography>
-          <Typography level="body-xs">siriwatk@test.com</Typography>
+          <Typography level="title-sm">Parth Solanki</Typography>
+          <Typography level="body-xs">parth.s@avdevs.com</Typography>
         </Box>
-        <IconButton size="sm" variant="plain" color="neutral">
+        <IconButton size="sm" variant="plain" color="neutral" onClick={handleLogout}>
           <LogoutRoundedIcon />
         </IconButton>
       </Box>
