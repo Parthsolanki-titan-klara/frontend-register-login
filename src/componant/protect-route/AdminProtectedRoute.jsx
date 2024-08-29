@@ -1,27 +1,32 @@
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import { useSelector } from 'react-redux';
-import jwtDecode from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
+import { useEffect } from "react";
 
 const AdminProtectedRoute = () => {
     const accessToken = useSelector((state) => state.auth.accessToken);
-    console.log("accessToken : ", accessToken);
+    const navigate = useNavigate();
     
     if(!accessToken){
-        return <Navigate to="/" />
+        return navigate('/');
     }
 
     try{
         const decodedToken = jwtDecode(accessToken);
         const userRole = decodedToken.role;
 
-        if (userRole === 'ADMIN') {
-            return <Outlet />;
-        } else {
-            return <Navigate to="/unauthorized" />;
-        }
+        useEffect(() => {
+            if (userRole !== 'ADMIN') {
+                navigate('/unauthorized');
+            }
+        }, [userRole]);
+
+        return (
+            userRole === 'ADMIN' ? <Outlet/> : <Navigate to="/unauthorized" />
+        );
     }catch(error){
         console.error("Invalid token:", error);
-        return <Navigate to="/" />;
+        return navigate('/');
     }
 }
 

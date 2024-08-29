@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import Avatar from '@mui/joy/Avatar';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
@@ -33,29 +33,7 @@ import AutorenewRoundedIcon from '@mui/icons-material/AutorenewRounded';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded';
-
-const rows = [
-    {
-        id: 'INV-1234',
-        date: 'Feb 3, 2023',
-        status: 'Refunded',
-        customer: {
-            initial: 'O',
-            name: 'Olivia Ryhe',
-            email: 'olivia@email.com',
-        },
-    },
-    {
-        id: 'INV-1233',
-        date: 'Feb 3, 2023',
-        status: 'Paid',
-        customer: {
-            initial: 'S',
-            name: 'Steve Hampton',
-            email: 'steve.hamp@email.com',
-        },
-    },
-];
+import { useSelector } from 'react-redux';
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -106,44 +84,90 @@ function RowMenu() {
 }
 
 export default function OrderTable() {
-    const [order, setOrder] = React.useState('desc');
-    const [selected, setSelected] = React.useState([]);
-    const [open, setOpen] = React.useState(false);
+    const [order, setOrder] = useState('desc');
+    const [selected, setSelected] = useState([]);
+    const [open, setOpen] = useState(false);
+    const [filter, setFilter] = useState('');
+    const [page, setPage] = useState(1);
+    const [data, setData] = useState([]);
+    const [rows, setRows] = useState([]);
+
+    // get userName from the redux store
+    const email = useSelector((state) => state.auth.email);
+
+    // get accessToken from the redux store
+    const accessToken = useSelector((state) => state.auth.accessToken);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const headers = new Headers();
+                headers.append('Content-Type', 'application/json');
+                headers.append('Authorization', `Bearer ${accessToken}`);
+
+                // Update the URL to include the email as a query parameter
+                // const url = `${import.meta.env.VITE_USER_API}?email=${encodeURIComponent(email)}`;
+                const url = `${import.meta.env.VITE_ALL_USERS_API}`;
+
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: headers,
+                    mode: 'cors',
+                    credentials: 'include'
+                });
+
+                const data = await response.json();
+
+                const userResponseList = data.userResponseList;
+                console.log("User Response List: ", userResponseList);
+
+
+                // Convert JSON object to array with keys
+                const dataArray = Object.keys(userResponseList).map(key => ({ key, value: userResponseList[key] }));
+                console.log("Data Array with Key: ", dataArray);
+                setRows(dataArray);
+
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        };
+        fetchData();
+    }, [filter, page]);
+
+    const [searchTerm, setSearchTerm] = useState('');
+    // const [roleFilter, setRoleFilter] = useState('');
+
+    // const handleRoleChange = (event) => {
+    //     console.log("Role Filter: ", event.target.value);
+
+    //     setRoleFilter(event.target.value);
+    // };
+
+    const handleSearchChange = (event) => {
+        setSearchTerm(event.target.value);
+    };
+
+    const filteredRows = rows.filter(row =>
+        row.value.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        row.value.lastName.toLowerCase().includes(searchTerm.toLowerCase())
+        // roleFilter === '' || row.value.userRole === roleFilter
+    );
+
 
     const renderFilters = () => (
         <React.Fragment>
             <FormControl size="sm">
-                <FormLabel>Status</FormLabel>
+                <FormLabel>Role</FormLabel>
                 <Select
                     size="sm"
-                    placeholder="Filter by status"
+                    placeholder="Filter by role"
+                    // value={roleFilter}
+                    // onChange={handleRoleChange}
                     slotProps={{ button: { sx: { whiteSpace: 'nowrap' } } }}
                 >
-                    <Option value="paid">Paid</Option>
-                    <Option value="pending">Pending</Option>
-                    <Option value="refunded">Refunded</Option>
-                    <Option value="cancelled">Cancelled</Option>
-                </Select>
-            </FormControl>
-            <FormControl size="sm">
-                <FormLabel>Category</FormLabel>
-                <Select size="sm" placeholder="All">
-                    <Option value="all">All</Option>
-                    <Option value="refund">Refund</Option>
-                    <Option value="purchase">Purchase</Option>
-                    <Option value="debit">Debit</Option>
-                </Select>
-            </FormControl>
-            <FormControl size="sm">
-                <FormLabel>Customer</FormLabel>
-                <Select size="sm" placeholder="All">
-                    <Option value="all">All</Option>
-                    <Option value="olivia">Olivia Rhye</Option>
-                    <Option value="steve">Steve Hampton</Option>
-                    <Option value="ciaran">Ciaran Murray</Option>
-                    <Option value="marina">Marina Macdonald</Option>
-                    <Option value="charles">Charles Fulton</Option>
-                    <Option value="jay">Jay Hoper</Option>
+                    <Option value="">All</Option>
+                    <Option value="admin">ADMIN</Option>
+                    <Option value="user">USER</Option>
                 </Select>
             </FormControl>
         </React.Fragment>
@@ -161,9 +185,10 @@ export default function OrderTable() {
             >
                 <Input
                     size="sm"
-                    placeholder="Search"
+                    placeholder="Search by FirstName"
                     startDecorator={<SearchIcon />}
                     sx={{ flexGrow: 1 }}
+
                 />
                 <IconButton
                     size="sm"
@@ -203,8 +228,9 @@ export default function OrderTable() {
                 }}
             >
                 <FormControl sx={{ flex: 1 }} size="sm">
-                    <FormLabel>Search for order</FormLabel>
-                    <Input size="sm" placeholder="Search" startDecorator={<SearchIcon />} />
+                    <FormLabel>Search for user</FormLabel>
+                    <Input size="sm" placeholder="Search by First Name , Last Name" startDecorator={<SearchIcon />} value={searchTerm}
+                        onChange={handleSearchChange} />
                 </FormControl>
                 {renderFilters()}
             </Box>
@@ -218,8 +244,7 @@ export default function OrderTable() {
                     flexShrink: 1,
                     overflow: 'auto',
                     minHeight: 0,
-                }}
-            >
+                }}            >
                 <Table
                     aria-labelledby="tableTitle"
                     stickyHeader
@@ -243,7 +268,7 @@ export default function OrderTable() {
                                     checked={selected.length === rows.length}
                                     onChange={(event) => {
                                         setSelected(
-                                            event.target.checked ? rows.map((row) => row.id) : [],
+                                            event.target.checked ? rows.map((row) => row.key) : [],
                                         );
                                     }}
                                     color={
@@ -270,28 +295,30 @@ export default function OrderTable() {
                                         },
                                     }}
                                 >
-                                    Invoice
+                                    Id
                                 </Link>
                             </th>
-                            <th style={{ width: 140, padding: '12px 6px' }}>Date</th>
-                            <th style={{ width: 140, padding: '12px 6px' }}>Status</th>
-                            <th style={{ width: 240, padding: '12px 6px' }}>Customer</th>
+                            <th style={{ width: 140, padding: '12px 6px' }}>First Name</th>
+                            <th style={{ width: 140, padding: '12px 6px' }}>Last Name</th>
+                            <th style={{ width: 100, padding: '12px 6px' }}>Status</th>
+                            <th style={{ width: 200, padding: '12px 6px' }}>Email</th>
+                            <th style={{ width: 140, padding: '12px 6px' }}>Role </th>
                             <th style={{ width: 140, padding: '12px 6px' }}> </th>
                         </tr>
                     </thead>
                     <tbody>
-                        {stableSort(rows, getComparator(order, 'id')).map((row) => (
-                            <tr key={row.id}>
+                        {stableSort(filteredRows, getComparator(order, 'key')).map((row) => (
+                            <tr key={row.key}>
                                 <td style={{ textAlign: 'center', width: 120 }}>
                                     <Checkbox
                                         size="sm"
-                                        checked={selected.includes(row.id)}
-                                        color={selected.includes(row.id) ? 'primary' : undefined}
+                                        checked={selected.includes(row.key)}
+                                        color={selected.includes(row.key) ? 'primary' : undefined}
                                         onChange={(event) => {
                                             setSelected((ids) =>
                                                 event.target.checked
-                                                    ? ids.concat(row.id)
-                                                    : ids.filter((itemId) => itemId !== row.id),
+                                                    ? ids.concat(row.key)
+                                                    : ids.filter((itemId) => itemId !== row.key),
                                             );
                                         }}
                                         slotProps={{ checkbox: { sx: { textAlign: 'left' } } }}
@@ -299,10 +326,13 @@ export default function OrderTable() {
                                     />
                                 </td>
                                 <td>
-                                    <Typography level="body-xs">{row.id}</Typography>
+                                    <Typography level="body-xs">{row.value.id}</Typography>
                                 </td>
                                 <td>
-                                    <Typography level="body-xs">{row.date}</Typography>
+                                    <Typography level="body-xs">{row.value.firstName}</Typography>
+                                </td>
+                                <td>
+                                    <Typography level="body-xs">{row.value.lastName}</Typography>
                                 </td>
                                 <td>
                                     <Chip
@@ -313,27 +343,29 @@ export default function OrderTable() {
                                                 Paid: <CheckRoundedIcon />,
                                                 Refunded: <AutorenewRoundedIcon />,
                                                 Cancelled: <BlockIcon />,
-                                            }[row.status]
+                                            }['Paid']
                                         }
                                         color={
                                             {
                                                 Paid: 'success',
                                                 Refunded: 'neutral',
                                                 Cancelled: 'danger',
-                                            }[row.status] 
+                                            }['Paid']
                                         }
                                     >
-                                        {row.status}
+                                        {'Paid'}
                                     </Chip>
                                 </td>
                                 <td>
                                     <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-                                        <Avatar size="sm">{row.customer.initial}</Avatar>
+                                        <Avatar size="sm">{row.value.firstName.charAt(0)}</Avatar>
                                         <div>
-                                            <Typography level="body-xs">{row.customer.name}</Typography>
-                                            <Typography level="body-xs">{row.customer.email}</Typography>
+                                            <Typography level="body-xs">{row.value.email}</Typography>
                                         </div>
                                     </Box>
+                                </td>
+                                <td>
+                                    <Typography level="body-xs">{row.value.userRole}</Typography>
                                 </td>
                                 <td>
                                     <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>

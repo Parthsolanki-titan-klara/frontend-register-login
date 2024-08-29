@@ -13,8 +13,8 @@ export function UnAuthorized() {
                     width: '100%',
                     backgroundImage:
                         theme.palette.mode === 'light'
-                            ? 'url("/public/assets/error_401.jpg")'
-                            : 'url("/public/assets/error_401.jpg")',
+                            ? 'url("/assets/error_401.jpg")'
+                            : 'url("/assets/error_401.jpg")',
                     backgroundSize: 'contain',
                     backgroundRepeat: 'no-repeat',
                     backgroundPosition: 'center',

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import { CssVarsProvider } from '@mui/joy/styles';
 import CssBaseline from '@mui/joy/CssBaseline';
 import Box from '@mui/joy/Box';
@@ -15,13 +15,30 @@ import Sidebar from './SideBar';
 import OrderTable from './OrderTable';
 import OrderList from './OrderList';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 
-export default function AdminDashboard({ userRole}) {
+export default function AdminDashboard() {
+
   const navigate = useNavigate();
-  if ( userRole !== 'ADMIN') {
-    return navigate('/unauthorized');
+
+  const accessToken = useSelector((state) => state.auth.accessToken);
+  const refreshToken = useSelector((state) => state.auth.refreshToken);
+
+  
+  const isTokenExpired = (token) => {
+    const { exp } = JSON.parse(atob(token.split('.')[1]));
+    return Date.now() >= exp * 1000;
+  };
+
+  if (!accessToken || isTokenExpired(accessToken)) {
+    if (!refreshToken || isTokenExpired(refreshToken)) {
+      navigate('/');
+    } else {
+      navigate('/reset-password');
+    }
   }
+
 
   return (
     <CssVarsProvider disableTransitionOnChange>
@@ -63,17 +80,8 @@ export default function AdminDashboard({ userRole}) {
               >
                 <HomeRoundedIcon />
               </Link>
-              <Link
-                underline="hover"
-                color="neutral"
-                href="#some-link"
-                fontSize={12}
-                fontWeight={500}
-              >
-                Dashboard
-              </Link>
               <Typography color="primary" fontWeight={500} fontSize={12}>
-                Orders
+                Dashboard
               </Typography>
             </Breadcrumbs>
           </Box>
@@ -89,7 +97,7 @@ export default function AdminDashboard({ userRole}) {
             }}
           >
             <Typography level="h2" component="h1">
-              Orders
+              Dashboard
             </Typography>
             <Button
               color="primary"

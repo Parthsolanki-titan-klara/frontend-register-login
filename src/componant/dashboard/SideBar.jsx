@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import GlobalStyles from '@mui/joy/GlobalStyles';
 import Avatar from '@mui/joy/Avatar';
 import Box from '@mui/joy/Box';
@@ -33,6 +33,8 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import ColorSchemeToggle from './ColorSchemeToggle';
 import closeSidebar from './utils';
 import useHandleLogout from '../LogOut';
+import { jwtDecode } from 'jwt-decode';
+import { useSelector } from 'react-redux';
 // ------------------------------------------------------------START OF CODE-----------------------------------------------------------------------------------------------
 
 function Toggler({
@@ -62,6 +64,19 @@ function Toggler({
 
 export default function Sidebar() {
   const handleLogout = useHandleLogout();
+  const [selectedIndex, setSelectedIndex] = useState(null);
+  const accessToken = useSelector((state) => state.auth.accessToken);
+  console.log("Sidebar accessToken: ", accessToken);
+  
+  const decodeToken = jwtDecode(accessToken);
+  console.log("Sidebar decodeToken: ", decodeToken);
+  
+  const fullName = decodeToken.userName;
+  const email = decodeToken.sub;
+
+  const handleListItemClick = (index) => {
+    setSelectedIndex(index);
+  };
 
   return (
     <Sheet
@@ -144,7 +159,9 @@ export default function Sidebar() {
           }}
         >
           <ListItem>
-            <ListItemButton>
+            <ListItemButton
+              selected={selectedIndex === 0}
+              onClick={() => handleListItemClick(0)}>
               <HomeRoundedIcon />
               <ListItemContent>
                 <Typography level="title-sm">Home</Typography>
@@ -153,7 +170,9 @@ export default function Sidebar() {
           </ListItem>
 
           <ListItem>
-            <ListItemButton>
+            <ListItemButton
+              selected={selectedIndex === 1}
+              onClick={() => handleListItemClick(1)}>
               <DashboardRoundedIcon />
               <ListItemContent>
                 <Typography level="title-sm">Dashboard</Typography>
@@ -162,7 +181,9 @@ export default function Sidebar() {
           </ListItem>
 
           <ListItem>
-            <ListItemButton selected>
+            <ListItemButton
+              selected={selectedIndex === 2}
+              onClick={() => handleListItemClick(2)}>
               <ShoppingCartRoundedIcon />
               <ListItemContent>
                 <Typography level="title-sm">Orders</Typography>
@@ -186,16 +207,36 @@ export default function Sidebar() {
             >
               <List sx={{ gap: 0.5 }}>
                 <ListItem sx={{ mt: 0.5 }}>
-                  <ListItemButton>All tasks</ListItemButton>
+                  <ListItemButton
+                    selected={selectedIndex === 3}
+                    onClick={() => handleListItemClick(3)}
+                  >
+                    All tasks
+                  </ListItemButton>
                 </ListItem>
                 <ListItem>
-                  <ListItemButton>Backlog</ListItemButton>
+                  <ListItemButton
+                    selected={selectedIndex === 4}
+                    onClick={() => handleListItemClick(4)}
+                  >
+                    Backlog
+                  </ListItemButton>
                 </ListItem>
                 <ListItem>
-                  <ListItemButton>In progress</ListItemButton>
+                  <ListItemButton
+                    selected={selectedIndex === 5}
+                    onClick={() => handleListItemClick(5)}
+                  >
+                    In progress
+                  </ListItemButton>
                 </ListItem>
                 <ListItem>
-                  <ListItemButton>Done</ListItemButton>
+                  <ListItemButton
+                    selected={selectedIndex === 6}
+                    onClick={() => handleListItemClick(6)}
+                  >
+                    Done
+                  </ListItemButton>
                 </ListItem>
               </List>
             </Toggler>
@@ -203,6 +244,8 @@ export default function Sidebar() {
 
           <ListItem>
             <ListItemButton
+              selected={selectedIndex === 7}
+              onClick={() => handleListItemClick(7)}
               role="menuitem"
               component="a"
               href="/joy-ui/getting-started/templates/messages/"
@@ -305,8 +348,8 @@ export default function Sidebar() {
           src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=286"
         />
         <Box sx={{ minWidth: 0, flex: 1 }}>
-          <Typography level="title-sm">Parth Solanki</Typography>
-          <Typography level="body-xs">parth.s@avdevs.com</Typography>
+          <Typography level="title-sm">{fullName}</Typography>
+          <Typography level="body-xs">{email}</Typography>
         </Box>
         <IconButton size="sm" variant="plain" color="neutral" onClick={handleLogout}>
           <LogoutRoundedIcon />
