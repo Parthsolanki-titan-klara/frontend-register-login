@@ -33,7 +33,10 @@ import AutorenewRoundedIcon from '@mui/icons-material/AutorenewRounded';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import axiosInstance from '../../interceptor/axiosInstance';
+// import { setAccessToken, setRefreshToken } from './pathToYourReduxActions'; // Import your Redux actions
+
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -98,25 +101,61 @@ export default function OrderTable() {
     // get accessToken from the redux store
     const accessToken = useSelector((state) => state.auth.accessToken);
 
+    // get refreshToken from the redux store
+    const refreshToken = useSelector((state) => state.auth.refreshToken);
+
+    const dispatch = useDispatch();
+
+
+    // const refreshAccessToken = async () => {
+    //     try {
+    //         const response = await axiosInstance.post(`${import.meta.env.VITE_API_BASE_URL}/refresh-token`, {
+    //             token: refreshToken,
+    //         });
+    //         const { accessToken: newAccessToken, refreshToken: newRefreshToken } = response.data;
+    //         dispatch(setTokens({ accessToken: newAccessToken, refreshToken: newRefreshToken}));
+    //         return newAccessToken;
+    //     } catch (error) {
+    //         console.error('Failed to refresh token', error);
+    //         // Handle token refresh failure (e.g., redirect to login)
+    //     }
+    // };
+
+
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const headers = new Headers();
-                headers.append('Content-Type', 'application/json');
-                headers.append('Authorization', `Bearer ${accessToken}`);
+                const allUserUrl = `${import.meta.env.VITE_API_BASE_URL}/allusers`;
 
-                // Update the URL to include the email as a query parameter
-                // const url = `${import.meta.env.VITE_USER_API}?email=${encodeURIComponent(email)}`;
-                const url = `${import.meta.env.VITE_ALL_USERS_API}`;
-
-                const response = await fetch(url, {
-                    method: 'GET',
-                    headers: headers,
-                    mode: 'cors',
-                    credentials: 'include'
+                const response = await axiosInstance.get(allUserUrl, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${accessToken}`,
+                    },
+                    params: {
+                        email: email,
+                    }
                 });
 
-                const data = await response.json();
+                // // If the response indicates the token is expired, refresh the token
+                // if (response.status === 401) {
+                //     log('Access token expired. Refreshing token...');
+                //     const newAccessToken = await refreshAccessToken();
+                //     if (newAccessToken) {
+                //         response = await axiosInstance.get(allUserUrl, {
+                //             headers: {
+                //                 'Content-Type': 'application/json',
+                //                 'Authorization': `Bearer ${newAccessToken}`,
+                //             },
+                //             params: {
+                //                 email: email,
+                //             }
+                //         });
+                //     }
+                // }
+
+                const data = response.data;
+                console.log("Response: ", data);
 
                 const userResponseList = data.userResponseList;
                 console.log("User Response List: ", userResponseList);
@@ -135,13 +174,6 @@ export default function OrderTable() {
     }, [filter, page]);
 
     const [searchTerm, setSearchTerm] = useState('');
-    // const [roleFilter, setRoleFilter] = useState('');
-
-    // const handleRoleChange = (event) => {
-    //     console.log("Role Filter: ", event.target.value);
-
-    //     setRoleFilter(event.target.value);
-    // };
 
     const handleSearchChange = (event) => {
         setSearchTerm(event.target.value);
@@ -150,7 +182,6 @@ export default function OrderTable() {
     const filteredRows = rows.filter(row =>
         row.value.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         row.value.lastName.toLowerCase().includes(searchTerm.toLowerCase())
-        // roleFilter === '' || row.value.userRole === roleFilter
     );
 
 

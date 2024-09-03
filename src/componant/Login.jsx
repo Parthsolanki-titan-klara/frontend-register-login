@@ -7,6 +7,8 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { setTokens } from "./slices/authSlice.jsx";
 import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
+import axiosInstance from '../interceptor/axiosInstance.jsx';
 
 const fields = loginFields;
 let fieldsState = {};
@@ -29,40 +31,34 @@ export default function Login() {
         authenticateUser();
     }
 
-    //Handle Login API Integration here
-    const authenticateUser = async (event) => {
+    const authenticateUser = async () => {
         try {
-            const headers = new Headers();
-            headers.append('Content-Type', 'application/json');
-
-            const response = await fetch(import.meta.env.VITE_LOGIN_API, {
-                method: 'POST',
-                headers: headers,
-                body: JSON.stringify(loginState),
-                mode: 'cors',
-                credentials: 'include'
+            const response = await axiosInstance.post('/login', loginState, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                withCredentials: true,
             });
 
-            const data = await response.json();
-            if (!response.ok) {
+            const data = response.data;
+
+            if (response.status === 200) {
+                toast.success('Login successful!');
+                dispatch(setTokens({ accessToken: data.accessToken, refreshToken: data.refreshToken, email: data.email }));
+                setTimeout(() => {
+                    navigate('/dashboard');
+                }, 1000);
+                console.log("Login successful : ", data);
+            } else {
                 toast.error(data.message || 'Login failed. Please try again.');
                 throw new Error('Network response was not ok');
             }
-
-
-            console.log('Success:', data);
-            dispatch(setTokens({ accessToken: data.accessToken, refreshToken: data.refreshToken, email: data.email }));
-            toast.success('Login successful!');
-            setTimeout(() => {
-                navigate('/dashboard');
-            }, 1000);
         } catch (error) {
-            console.error('Error:', error);        }
+            console.error('error mesage :', error);
+            toast.error('Login failed. Please try again.');
+        }
     }
 
-    if (accessToken) {
-        return <Navigate to="/dashboard" />
-    }
     return (
         <div className="mt-8 space-y-6">
             <form className="mt-8 space-y-6" onSubmit={handleSubmit}>

@@ -3,94 +3,85 @@ import { signupFields } from "../constants/FormFields"
 import FormAction from "./FormAction";
 import Input from "./Input";
 import { useNavigate } from 'react-router-dom';
-import { data } from 'autoprefixer';
 import { toast } from 'react-toastify';
+import axios from 'axios';
+import axiosInstance from '../interceptor/axiosInstance';
 
-const fields=signupFields;
+const fields = signupFields;
 
-let fieldsState={};
+let fieldsState = {};
 
-fields.forEach(field => fieldsState[field.id]='');
+fields.forEach(field => fieldsState[field.id] = '');
 
-export default function SignUp(){
-  const [signupState,setSignupState]=useState(fieldsState);
+export default function SignUp() {
+  const [signupState, setSignupState] = useState(fieldsState);
 
-  const handleChange=(e)=>setSignupState({...signupState,[e.target.id]:e.target.value});
+  const handleChange = (e) => setSignupState({ ...signupState, [e.target.id]: e.target.value });
 
   const navigate = useNavigate();
 
-  const handleSubmit=(e)=>{
+  const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Registration form : ",signupState);
+    console.log("Registration form : ", signupState);
     createAccount()
     console.log("Account created successfully");
-    
+
   }
 
-  //handle Signup API Integration here
-  const createAccount= async()=>{
+  // create account function 
+  const createAccount = async () => {
     try {
-      const headers = new Headers();
-      headers.append('Content-Type', 'application/json');
-
-
-      const response = await fetch(import.meta.env.VITE_REGISTER_API, {
-        method: 'POST',
-        headers: headers,
-        body: JSON.stringify(signupState),
-        mode: 'cors',
-        credentials: 'include'
+      const response = await axiosInstance.post('/register', signupState, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        withCredentials: true,
       });
 
-      const data = await response.json();
-      if (!response.ok) {
+      const data = response.data;
+      console.log("Registration response : ", data);
+      
+
+      if (response.status === 200) {
+        toast.success('Registration successful!');
+        setTimeout(() => {
+          navigate('/');
+        }, 1000);
+        console.log("Account created successfully : ", data);
+      } else {
         toast.error(data.message || 'Registration failed. Please try again.');
         throw new Error('Network response was not ok');
       }
-
-      console.log('response :', response);
-      
-      
-      console.log('Success:', data);
-      console.log('accessToken:', data.accessToken);
-      
-      toast.success('Registration successful!');
-      setTimeout(() => {
-        navigate('/');
-      }, 1000);
     } catch (error) {
-      console.error('error mesage :' , error);
-      console.log('error mesage :' , data.message);
+      console.error('error mesage :', error);
+      toast.error('Registration failed. Please try again.');
     }
   }
 
-    return(
-      <div className="mt-8 space-y-6">
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+  return (
+    <div className="mt-8 space-y-6">
+      <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
         <div className="">
-        {
-                fields.map(field=>
-                        <Input
-                            key={field.id}
-                            handleChange={handleChange}
-                            value={signupState[field.id]}
-                            labelText={field.labelText}
-                            labelFor={field.labelFor}
-                            id={field.id}
-                            name={field.name}
-                            type={field.type}
-                            isRequired={field.isRequired}
-                            placeholder={field.placeholder}
-                    />
-                
-                )
-            }
+          {
+            fields.map(field =>
+              <Input
+                key={field.id}
+                handleChange={handleChange}
+                value={signupState[field.id]}
+                labelText={field.labelText}
+                labelFor={field.labelFor}
+                id={field.id}
+                name={field.name}
+                type={field.type}
+                isRequired={field.isRequired}
+                placeholder={field.placeholder}
+              />
+
+            )
+          }
           <FormAction handleSubmit={handleSubmit} text="Signup" />
         </div>
-
-         
-
       </form>
-      </div>
-    )
+    </div>
+  )
 }

@@ -27,4 +27,5 @@ const persistConfig = {
   
   const persistor = persistStore(store);
   
-  export { store, persistor };
+  export default store;
+  export { persistor };
