@@ -12,9 +12,9 @@ axiosInstance.interceptors.response.use(
     response => response,
     async error => {
         console.log('Error in axiosInstance:', error);
-
+        const specialUrl = '/allusers';
         const originalRequest = error.config;
-        if (error.response.status === 401 && !originalRequest._retry) {
+        if (error.response.status === 401 && !originalRequest._retry && originalRequest.url.includes(specialUrl)) {
             console.log('Refreshing token... while 401 error');
 
             originalRequest._retry = true;

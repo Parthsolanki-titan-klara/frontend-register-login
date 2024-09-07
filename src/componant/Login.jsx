@@ -3,11 +3,10 @@ import { loginFields } from "../constants/FormFields";
 import Input from "./Input";
 import FormExtra from "./FormExtra";
 import FormAction from "./FormAction";
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { setTokens } from "./slices/authSlice.jsx";
 import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios';
 import axiosInstance from '../interceptor/axiosInstance.jsx';
 
 const fields = loginFields;
@@ -17,7 +16,7 @@ fields.forEach(field => fieldsState[field.id] = '');
 export default function Login() {
     const [loginState, setLoginState] = useState(fieldsState);
     const accessToken = useSelector((state) => state.auth.accessToken);
-    
+
     const dispatch = useDispatch();
 
     const navigate = useNavigate();
@@ -54,8 +53,13 @@ export default function Login() {
                 throw new Error('Network response was not ok');
             }
         } catch (error) {
-            console.error('error mesage :', error);
-            toast.error('Login failed. Please try again.');
+            if (error.response.data.message == 'Invalid credentials') {
+                toast.error('Invalid credentials. Please try again.');
+            } else {
+                console.log(error.response.data.message);
+                toast.error(error.response.data.message || 'Login failed. Please try again.');
+                navigate('/sign-up');
+            }
         }
     }
 

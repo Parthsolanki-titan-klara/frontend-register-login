@@ -40,21 +40,16 @@ export default function SignUp() {
 
       const data = response.data;
       console.log("Registration response : ", data);
-      
 
-      if (response.status === 200) {
         toast.success('Registration successful!');
         setTimeout(() => {
           navigate('/');
         }, 1000);
         console.log("Account created successfully : ", data);
-      } else {
-        toast.error(data.message || 'Registration failed. Please try again.');
-        throw new Error('Network response was not ok');
-      }
     } catch (error) {
-      console.error('error mesage :', error);
-      toast.error('Registration failed. Please try again.');
+      console.log(error.response.data.message);
+      toast.error(error.response.data.message || 'Registration failed. Please try again.');
+      navigate('/'); //Redirect to login page
     }
   }
 
