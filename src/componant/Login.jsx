@@ -15,7 +15,7 @@ fields.forEach(field => fieldsState[field.id] = '');
 
 export default function Login() {
     const [loginState, setLoginState] = useState(fieldsState);
-    const accessToken = useSelector((state) => state.auth.accessToken);
+    const { accessToken, refreshToken } = useSelector(state => state.auth);
 
     const dispatch = useDispatch();
 
@@ -31,6 +31,8 @@ export default function Login() {
     }
 
     const authenticateUser = async () => {
+        // if (accessToken) {
+
         try {
             const response = await axiosInstance.post('/login', loginState, {
                 headers: {
@@ -61,6 +63,7 @@ export default function Login() {
                 navigate('/sign-up');
             }
         }
+        // }
     }
 
     return (

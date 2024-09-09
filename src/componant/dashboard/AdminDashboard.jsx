@@ -14,30 +14,30 @@ import Header from './Header';
 import Sidebar from './SideBar';
 import OrderTable from './OrderTable';
 import OrderList from './OrderList';
-import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+// import { useNavigate } from 'react-router-dom';
+// import { useSelector } from 'react-redux';
 
 
 export default function AdminDashboard() {
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  const accessToken = useSelector((state) => state.auth.accessToken);
-  const refreshToken = useSelector((state) => state.auth.refreshToken);
+  // const accessToken = useSelector((state) => state.auth.accessToken);
+  // const refreshToken = useSelector((state) => state.auth.refreshToken);
 
   
-  const isTokenExpired = (token) => {
-    const { exp } = JSON.parse(atob(token.split('.')[1]));
-    return Date.now() >= exp * 1000;
-  };
+  // const isTokenExpired = (token) => {
+  //   const { exp } = JSON.parse(atob(token.split('.')[1]));
+  //   return Date.now() >= exp * 1000;
+  // };
 
-  if (!accessToken || isTokenExpired(accessToken)) {
-    if (!refreshToken || isTokenExpired(refreshToken)) {
-      navigate('/');
-    } else {
-      navigate('/reset-password');
-    }
-  }
+  // if (!accessToken || isTokenExpired(accessToken)) {
+  //   if (!refreshToken || isTokenExpired(refreshToken)) {
+  //     navigate('/');
+  //   } else {
+  //     navigate('/reset-password');
+  //   }
+  // }
 
 
   return (

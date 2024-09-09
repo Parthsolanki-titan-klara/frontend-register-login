@@ -1,6 +1,9 @@
 import axios from 'axios';
 import store from '../componant/store/store'; // Import the store directly
-import { setTokens } from '../componant/slices/authSlice';
+import { clearTokens, setTokens } from '../componant/slices/authSlice';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 // Create an Axios instance
 const axiosInstance = axios.create({
@@ -22,7 +25,7 @@ axiosInstance.interceptors.response.use(
                 const state = store.getState();
                 const refreshToken = state.auth.refreshToken;
                 console.log('Refresh token from the store: ', refreshToken);
-                
+
                 const refreshTokenUrl = `${import.meta.env.VITE_API_BASE_URL}/refresh-token`;
                 const refreshTokenResponse = await axios.post(refreshTokenUrl, {}, {
                     headers: {
@@ -34,8 +37,7 @@ axiosInstance.interceptors.response.use(
                 console.log('Refresh token response:', refreshTokenResponse);
 
                 if (refreshTokenResponse.status === 200) {
-                    const newAccessToken = refreshTokenResponse.data.accessToken;
-                    const newRefreshToken = refreshTokenResponse.data.refreshToken;
+                    const { accessToken: newAccessToken, refreshToken: newRefreshToken } = response.data;
 
                     // Update tokens
                     store.dispatch(setTokens({ accessToken: newAccessToken, refreshToken: newRefreshToken }));
@@ -43,10 +45,21 @@ axiosInstance.interceptors.response.use(
                     originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
 
                     console.log('Retry original request after refreshing token:', originalRequest);
-                    
+
                     return axiosInstance(originalRequest);
                 }
             } catch (err) {
+                // console.log('Error in refreshing token:', err);
+                // Clear the Redux store and redirect to the login page
+                console.log('Error in refreshing token... clearing tokens');
+                
+                store.dispatch(clearTokens());
+                console.log("accesstoken : ", useSelector((state) => state.auth.accessToken));
+                console.log("refreshtoken : ", useSelector((state) => state.auth.refreshToken));
+                
+                useNavigate('/');
+                toast.error('Session expired. Please login again.');
+
                 return Promise.reject(err);
             }
         }

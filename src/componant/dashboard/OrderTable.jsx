@@ -35,6 +35,7 @@ import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded';
 import { useDispatch, useSelector } from 'react-redux';
 import axiosInstance from '../../interceptor/axiosInstance';
+import { toast } from 'react-toastify';
 // import { setAccessToken, setRefreshToken } from './pathToYourReduxActions'; // Import your Redux actions
 
 
@@ -106,28 +107,10 @@ export default function OrderTable() {
 
     const dispatch = useDispatch();
 
-
-    // const refreshAccessToken = async () => {
-    //     try {
-    //         const response = await axiosInstance.post(`${import.meta.env.VITE_API_BASE_URL}/refresh-token`, {
-    //             token: refreshToken,
-    //         });
-    //         const { accessToken: newAccessToken, refreshToken: newRefreshToken } = response.data;
-    //         dispatch(setTokens({ accessToken: newAccessToken, refreshToken: newRefreshToken}));
-    //         return newAccessToken;
-    //     } catch (error) {
-    //         console.error('Failed to refresh token', error);
-    //         // Handle token refresh failure (e.g., redirect to login)
-    //     }
-    // };
-
-
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const allUserUrl = `${import.meta.env.VITE_API_BASE_URL}/allusers`;
-
-                const response = await axiosInstance.get(allUserUrl, {
+                const response = await axiosInstance.get('/allusers', {
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${accessToken}`,
@@ -136,23 +119,6 @@ export default function OrderTable() {
                         email: email,
                     }
                 });
-
-                // // If the response indicates the token is expired, refresh the token
-                // if (response.status === 401) {
-                //     log('Access token expired. Refreshing token...');
-                //     const newAccessToken = await refreshAccessToken();
-                //     if (newAccessToken) {
-                //         response = await axiosInstance.get(allUserUrl, {
-                //             headers: {
-                //                 'Content-Type': 'application/json',
-                //                 'Authorization': `Bearer ${newAccessToken}`,
-                //             },
-                //             params: {
-                //                 email: email,
-                //             }
-                //         });
-                //     }
-                // }
 
                 const data = response.data;
                 console.log("Response: ", data);
@@ -167,7 +133,8 @@ export default function OrderTable() {
                 setRows(dataArray);
 
             } catch (error) {
-                console.error('Error:', error);
+                console.log(error.response.data.message);
+                toast.error(error.response.data.message);
             }
         };
         fetchData();
